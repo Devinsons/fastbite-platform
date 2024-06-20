@@ -6,6 +6,7 @@ import com.acme.fastbite.platform.shared.domain.model.aggregates.AuditableAbstra
 import jakarta.persistence.*;
 import lombok.Getter;
 
+@Getter
 @Entity
 public class Restaurant extends AuditableAbstractAggregateRoot<Restaurant> {
 
