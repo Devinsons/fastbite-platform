@@ -1,6 +1,7 @@
 package com.acme.fastbite.platform.profiles.domain.model.aggregates;
 
 import com.acme.fastbite.platform.profiles.domain.model.commands.CreateProfileCommand;
+import com.acme.fastbite.platform.profiles.domain.model.commands.UpdateProfileCommand;
 import com.acme.fastbite.platform.profiles.domain.model.valueobjects.EmailAddress;
 import com.acme.fastbite.platform.profiles.domain.model.valueobjects.UserId;
 import com.acme.fastbite.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
@@ -62,6 +63,12 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
         this.schedule = command.schedule();
         this.image = command.img();
         this.userId = new UserId(command.userId());
+    }
+    public void updateProfile(UpdateProfileCommand command) {
+        this.name = command.name();
+        this.address = command.address();
+        this.schedule = command.schedule();
+        this.image = command.img();
     }
 
     public Profile(Long userId) {
