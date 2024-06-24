@@ -9,6 +9,7 @@ import com.acme.fastbite.platform.planning.interfaces.rest.transform.ProductReso
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +37,15 @@ public class ProductController {
                 .map(ProductResourceFromEntityAssembler::toResourceFromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(productResources);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResource> getProductById(@PathVariable Long productId) {
+        var product = productRepository.findById(productId);
+        if (product.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var productResource = ProductResourceFromEntityAssembler.toResourceFromEntity(product.get());
+        return ResponseEntity.ok(productResource);
     }
 }

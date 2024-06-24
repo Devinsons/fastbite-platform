@@ -1,6 +1,7 @@
 package com.acme.fastbite.platform.planning.domain.services;
 
 import com.acme.fastbite.platform.planning.domain.model.aggregates.Restaurant;
+import com.acme.fastbite.platform.planning.domain.model.queries.GetRestaurantByIdQuery;
 import com.acme.fastbite.platform.planning.domain.model.queries.GetRestaurantByProfileIdQuery;
 import com.acme.fastbite.platform.planning.domain.model.queries.GetRestaurantByAcmeRestaurantRecordIdQuery;
 
@@ -11,4 +12,5 @@ public interface RestaurantQueryService {
     Optional<Restaurant> handle(GetRestaurantByProfileIdQuery query);
     Optional<Restaurant> handle(GetRestaurantByAcmeRestaurantRecordIdQuery query);
     List<Restaurant> getAllRestaurants();
+    Optional<Restaurant> handle(GetRestaurantByIdQuery query);
 }

@@ -2,6 +2,7 @@ package com.acme.fastbite.platform.planning.application.internal.queryservices;
 
 import com.acme.fastbite.platform.planning.domain.model.aggregates.Company;
 import com.acme.fastbite.platform.planning.domain.model.queries.GetCompanyByAcmeCompanyRecordIdQuery;
+import com.acme.fastbite.platform.planning.domain.model.queries.GetCompanyByIdQuery;
 import com.acme.fastbite.platform.planning.domain.model.queries.GetCompanyByProfileIdQuery;
 import com.acme.fastbite.platform.planning.domain.services.CompanyQueryService;
 import com.acme.fastbite.platform.planning.infrastructure.persistence.jpa.repositories.CompanyRepository;
@@ -31,5 +32,10 @@ public class CompanyQueryServiceImpl implements CompanyQueryService {
     @Override
     public List<Company> getAllCompanys() {
         return companyRepository.findAll();
+    }
+
+    @Override
+    public Optional<Company> handle(GetCompanyByIdQuery query) {
+        return companyRepository.findById(query.id());
     }
 }

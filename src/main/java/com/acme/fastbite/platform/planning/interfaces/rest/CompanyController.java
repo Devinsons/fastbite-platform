@@ -2,13 +2,17 @@ package com.acme.fastbite.platform.planning.interfaces.rest;
 
 import com.acme.fastbite.platform.planning.application.internal.outboundservices.acl.ExternalProfileService;
 import com.acme.fastbite.platform.planning.domain.model.queries.GetCompanyByAcmeCompanyRecordIdQuery;
+import com.acme.fastbite.platform.planning.domain.model.queries.GetCompanyByIdQuery;
+import com.acme.fastbite.platform.planning.domain.model.queries.GetRestaurantByIdQuery;
 import com.acme.fastbite.platform.planning.domain.model.valueobjects.AcmeCompanyRecordId;
 import com.acme.fastbite.platform.planning.domain.services.CompanyCommandService;
 import com.acme.fastbite.platform.planning.domain.services.CompanyQueryService;
 import com.acme.fastbite.platform.planning.interfaces.rest.resources.CreateCompanyResource;
 import com.acme.fastbite.platform.planning.interfaces.rest.resources.CompanyResource;
+import com.acme.fastbite.platform.planning.interfaces.rest.resources.RestaurantResource;
 import com.acme.fastbite.platform.planning.interfaces.rest.transform.CreateCompanyCommandFromResourceAssembler;
 import com.acme.fastbite.platform.planning.interfaces.rest.transform.CompanyResourceFromEntityAssembler;
+import com.acme.fastbite.platform.planning.interfaces.rest.transform.RestaurantResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,20 +39,7 @@ public class CompanyController {
 
     @PostMapping
     public ResponseEntity<CompanyResource> createStudent(@RequestBody CreateCompanyResource resource) {
-        /**
-         *   var createCompanyCommand= CreateCompanyCommandFromResourceAssembler.toCommandFromResource(resource);
-         *         var companyId = companyCommandService.handle(createCompanyCommand);
-         *         if (companyId.companyRecordId().isEmpty()) {
-         *             return ResponseEntity.badRequest().build();
-         *         }
-         *         var getCompanyByAcmeCompanyRecordIdQuery = new GetCompanyByAcmeCompanyRecordIdQuery(companyId);
-         *         var company = companyQueryService.handle(getCompanyByAcmeCompanyRecordIdQuery);
-         *         if (company.isEmpty()) {
-         *             return ResponseEntity.badRequest().build();
-         *         }
-         *         var companyResource = CompanyResourceFromEntityAssembler.toResourceFromEntity(company.get());
-         *         return new ResponseEntity<>(companyResource, HttpStatus.CREATED);
-         */
+
         var createCompanyCommand = CreateCompanyCommandFromResourceAssembler.toCommandFromResource(resource);
         var companyId = companyCommandService.handle(createCompanyCommand);
         if (companyId.companyRecordId().isEmpty()) {
@@ -65,16 +56,7 @@ public class CompanyController {
 
     @GetMapping("/{companyRecordId}")
     public ResponseEntity<CompanyResource> getStudentByAcmeStudentRecordId(@PathVariable String companyRecordId) {
-        /**
-         * var acmeCompanyRecordId = new AcmeCompanyRecordId(companyRecordId);
-         *         var getCompanyByAcmeCompanyRecordIdQuery = new GetCompanyByAcmeCompanyRecordIdQuery(acmeCompanyRecordId);
-         *         var company = companyQueryService.handle(getCompanyByAcmeCompanyRecordIdQuery);
-         *         if (company.isEmpty()) {
-         *             return ResponseEntity.notFound().build();
-         *         }
-         *         var companyResource = CompanyResourceFromEntityAssembler.toResourceFromEntity(company.get());
-         *         return ResponseEntity.ok(companyResource);
-         */
+
         var acmeCompanyRecordId = new AcmeCompanyRecordId(companyRecordId);
         var getCompanyByAcmeCompanyRecordIdQuery = new GetCompanyByAcmeCompanyRecordIdQuery(acmeCompanyRecordId);
         var company = companyQueryService.handle(getCompanyByAcmeCompanyRecordIdQuery);
@@ -85,17 +67,16 @@ public class CompanyController {
         return ResponseEntity.ok(companyResource);
     }
 
-    /**
-     *  @GetMapping
-     *     public ResponseEntity<List<CompanyResource>> getAllCompanys() {
-     *         var companys = companyQueryService.getAllCompanys();
-     *         var companyResources = companys.stream()
-     *                 .map(CompanyResourceFromEntityAssembler::toResourceFromEntity)
-     *                 .collect(Collectors.toList());
-     *         return ResponseEntity.ok(companyResources);
-     *     }
-     *
-     */
+    @GetMapping("/id/{id}")
+    public ResponseEntity<CompanyResource> getCompanyById(@PathVariable Long id) {
+        var getCompanyByIdQuery = new GetCompanyByIdQuery(id);
+        var company = companyQueryService.handle(getCompanyByIdQuery);
+        if (company.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var companyResource = CompanyResourceFromEntityAssembler.toResourceFromEntity(company.get(), externalProfileService);
+        return ResponseEntity.ok(companyResource);
+    }
 
     @GetMapping
     public ResponseEntity<List<CompanyResource>> getAllCompanys() {

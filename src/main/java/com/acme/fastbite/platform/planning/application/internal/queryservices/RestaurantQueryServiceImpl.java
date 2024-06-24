@@ -1,6 +1,7 @@
 package com.acme.fastbite.platform.planning.application.internal.queryservices;
 
 import com.acme.fastbite.platform.planning.domain.model.aggregates.Restaurant;
+import com.acme.fastbite.platform.planning.domain.model.queries.GetRestaurantByIdQuery;
 import com.acme.fastbite.platform.planning.domain.model.queries.GetRestaurantByProfileIdQuery;
 import com.acme.fastbite.platform.planning.domain.model.queries.GetRestaurantByAcmeRestaurantRecordIdQuery;
 import com.acme.fastbite.platform.planning.domain.services.RestaurantQueryService;
@@ -32,5 +33,10 @@ public class RestaurantQueryServiceImpl implements RestaurantQueryService {
     @Override
     public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
+    }
+
+    @Override
+    public Optional<Restaurant> handle(GetRestaurantByIdQuery query) {
+        return restaurantRepository.findById(query.id());
     }
 }

@@ -9,6 +9,7 @@ public class CompanyResourceFromEntityAssembler {
         var profile = externalProfileService.fetchProfileById(company.getProfileId());
 
         return new CompanyResource(
+                company.getId(),
                 company.getCompanyRecordId(),
                 company.getProfileId(),
                 profile.name(),

@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     Optional<Company> findByAcmeCompanyRecordId(AcmeCompanyRecordId companyRecordId);
     Optional<Company> findByProfileId(ProfileId profileId);
+    Optional<Company> findById(Long id);
 }

@@ -2,6 +2,7 @@ package com.acme.fastbite.platform.planning.interfaces.rest;
 
 import com.acme.fastbite.platform.planning.application.internal.outboundservices.acl.ExternalProfileService;
 import com.acme.fastbite.platform.planning.domain.model.queries.GetRestaurantByAcmeRestaurantRecordIdQuery;
+import com.acme.fastbite.platform.planning.domain.model.queries.GetRestaurantByIdQuery;
 import com.acme.fastbite.platform.planning.domain.model.valueobjects.AcmeRestaurantRecordId;
 import com.acme.fastbite.platform.planning.domain.services.RestaurantCommandService;
 import com.acme.fastbite.platform.planning.domain.services.RestaurantQueryService;
@@ -35,20 +36,7 @@ public class RestaurantController {
 
     @PostMapping
     public ResponseEntity<RestaurantResource> createStudent(@RequestBody CreateRestaurantResource resource) {
-        /**
-         *   var createRestaurantCommand= CreateRestaurantCommandFromResourceAssembler.toCommandFromResource(resource);
-         *         var restaurantId = restaurantCommandService.handle(createRestaurantCommand);
-         *         if (restaurantId.restaurantRecordId().isEmpty()) {
-         *             return ResponseEntity.badRequest().build();
-         *         }
-         *         var getRestaurantByAcmeRestaurantRecordIdQuery = new GetRestaurantByAcmeRestaurantRecordIdQuery(restaurantId);
-         *         var restaurant = restaurantQueryService.handle(getRestaurantByAcmeRestaurantRecordIdQuery);
-         *         if (restaurant.isEmpty()) {
-         *             return ResponseEntity.badRequest().build();
-         *         }
-         *         var restaurantResource = RestaurantResourceFromEntityAssembler.toResourceFromEntity(restaurant.get());
-         *         return new ResponseEntity<>(restaurantResource, HttpStatus.CREATED);
-         */
+
         var createRestaurantCommand = CreateRestaurantCommandFromResourceAssembler.toCommandFromResource(resource);
         var restaurantId = restaurantCommandService.handle(createRestaurantCommand);
         if (restaurantId.restaurantRecordId().isEmpty()) {
@@ -65,16 +53,7 @@ public class RestaurantController {
 
     @GetMapping("/{restaurantRecordId}")
     public ResponseEntity<RestaurantResource> getStudentByAcmeStudentRecordId(@PathVariable String restaurantRecordId) {
-        /**
-         * var acmeRestaurantRecordId = new AcmeRestaurantRecordId(restaurantRecordId);
-         *         var getRestaurantByAcmeRestaurantRecordIdQuery = new GetRestaurantByAcmeRestaurantRecordIdQuery(acmeRestaurantRecordId);
-         *         var restaurant = restaurantQueryService.handle(getRestaurantByAcmeRestaurantRecordIdQuery);
-         *         if (restaurant.isEmpty()) {
-         *             return ResponseEntity.notFound().build();
-         *         }
-         *         var restaurantResource = RestaurantResourceFromEntityAssembler.toResourceFromEntity(restaurant.get());
-         *         return ResponseEntity.ok(restaurantResource);
-         */
+
         var acmeRestaurantRecordId = new AcmeRestaurantRecordId(restaurantRecordId);
         var getRestaurantByAcmeRestaurantRecordIdQuery = new GetRestaurantByAcmeRestaurantRecordIdQuery(acmeRestaurantRecordId);
         var restaurant = restaurantQueryService.handle(getRestaurantByAcmeRestaurantRecordIdQuery);
@@ -85,17 +64,16 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantResource);
     }
 
-    /**
-     *  @GetMapping
-     *     public ResponseEntity<List<RestaurantResource>> getAllRestaurants() {
-     *         var restaurants = restaurantQueryService.getAllRestaurants();
-     *         var restaurantResources = restaurants.stream()
-     *                 .map(RestaurantResourceFromEntityAssembler::toResourceFromEntity)
-     *                 .collect(Collectors.toList());
-     *         return ResponseEntity.ok(restaurantResources);
-     *     }
-     *
-     */
+    @GetMapping("/id/{id}")
+    public ResponseEntity<RestaurantResource> getRestaurantById(@PathVariable Long id) {
+        var getRestaurantByIdQuery = new GetRestaurantByIdQuery(id);
+        var restaurant = restaurantQueryService.handle(getRestaurantByIdQuery);
+        if (restaurant.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var restaurantResource = RestaurantResourceFromEntityAssembler.toResourceFromEntity(restaurant.get(), externalProfileService);
+        return ResponseEntity.ok(restaurantResource);
+    }
 
     @GetMapping
     public ResponseEntity<List<RestaurantResource>> getAllRestaurants() {

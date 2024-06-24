@@ -10,6 +10,7 @@ public class RestaurantResourceFromEntityAssembler {
         var profile = externalProfileService.fetchProfileById(restaurant.getProfileId());
 
         return new RestaurantResource(
+                restaurant.getId(),
                 restaurant.getRestaurantRecordId(),
                 restaurant.getProfileId(),
                 profile.name(),
